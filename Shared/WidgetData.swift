@@ -27,19 +27,41 @@ struct WidgetData: Codable {
     let modelUsage: [String: Int]
     let lastUpdated: Date
 
-    private static let appGroupID = "group.me.local.ccswitcher.codex"
+    private static let appGroupID = "group.me.neonwatty.runscope"
+    private static let legacyAppGroupID = "group.me.local.ccswitcher.codex"
     private static let fileName = "widget-data.json"
 
     private static var sharedContainerURL: URL? {
+        containerURL(for: appGroupID)
+    }
+
+    private static func containerURL(for appGroupID: String) -> URL? {
         FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupID)
+    }
+
+    private static func readData(from appGroupID: String) -> Data? {
+        guard let containerURL = containerURL(for: appGroupID) else { return nil }
+        let fileURL = containerURL.appendingPathComponent(fileName)
+        return try? Data(contentsOf: fileURL)
     }
 
     /// Load from the shared App Group container.
     static func load() -> WidgetData? {
-        guard let containerURL = sharedContainerURL else { return nil }
-        let fileURL = containerURL.appendingPathComponent(fileName)
-        guard let data = try? Data(contentsOf: fileURL) else { return nil }
-        return try? JSONDecoder().decode(WidgetData.self, from: data)
+        if let data = readData(from: appGroupID) {
+            return try? JSONDecoder().decode(WidgetData.self, from: data)
+        }
+
+        guard let legacyData = readData(from: legacyAppGroupID),
+              let decoded = try? JSONDecoder().decode(WidgetData.self, from: legacyData) else {
+            return nil
+        }
+
+        if let containerURL = sharedContainerURL {
+            let fileURL = containerURL.appendingPathComponent(fileName)
+            try? legacyData.write(to: fileURL, options: .atomic)
+        }
+
+        return decoded
     }
 
     /// Save to the shared App Group container.

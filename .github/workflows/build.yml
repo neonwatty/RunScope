@@ -82,33 +82,33 @@ jobs:
           # 1. Sign the widget extension with its own entitlements
           codesign --force --options runtime --sign "Developer ID Application" --timestamp \
             --entitlements CCSwitcherWidget/Resources/CCSwitcherWidget.entitlements \
-            "build/Release/CCSwitcher Codex.app/Contents/Extensions/CCSwitcherWidgetExtension.appex"
+            "build/Release/RunScope.app/Contents/Extensions/CCSwitcherWidgetExtension.appex"
 
           # 2. Sign the main app bundle
           codesign --force --options runtime --sign "Developer ID Application" --timestamp \
             --entitlements CCSwitcher/Resources/CCSwitcher.entitlements \
-            "build/Release/CCSwitcher Codex.app"
+            "build/Release/RunScope.app"
 
       - name: Create DMG
         run: |
           cd build/Release
           # Create DMG
           create-dmg \
-            --volname "CCSwitcher Codex" \
+            --volname "RunScope" \
             --window-pos 200 120 \
             --window-size 600 400 \
             --icon-size 100 \
-            --icon "CCSwitcher Codex.app" 150 190 \
-            --hide-extension "CCSwitcher Codex.app" \
+            --icon "RunScope.app" 150 190 \
+            --hide-extension "RunScope.app" \
             --app-drop-link 450 190 \
-            "CCSwitcher Codex.dmg" \
-            "CCSwitcher Codex.app"
+            "RunScope.dmg" \
+            "RunScope.app"
 
       - name: Sign DMG
         if: ${{ env.HAS_APPLE_SECRETS == 'true' }}
         run: |
           cd build/Release
-          codesign --force --sign "Developer ID Application" --timestamp "CCSwitcher Codex.dmg"
+          codesign --force --sign "Developer ID Application" --timestamp "RunScope.dmg"
 
       - name: Notarize DMG
         if: ${{ env.HAS_APPLE_SECRETS == 'true' }}
@@ -118,7 +118,7 @@ jobs:
           APP_SPECIFIC_PASSWORD: ${{ secrets.APP_SPECIFIC_PASSWORD }}
         run: |
           cd build/Release
-          xcrun notarytool submit "CCSwitcher Codex.dmg" \
+          xcrun notarytool submit "RunScope.dmg" \
             --apple-id "$APPLE_ID" \
             --team-id "$TEAM_ID" \
             --password "$APP_SPECIFIC_PASSWORD" \
@@ -128,18 +128,18 @@ jobs:
         if: ${{ env.HAS_APPLE_SECRETS == 'true' }}
         run: |
           cd build/Release
-          xcrun stapler staple "CCSwitcher Codex.dmg"
+          xcrun stapler staple "RunScope.dmg"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: CCSwitcher-Codex-macOS
-          path: build/Release/CCSwitcher Codex.dmg
+          name: RunScope-macOS
+          path: build/Release/RunScope.dmg
 
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/v')
         with:
-          files: build/Release/CCSwitcher Codex.dmg
+          files: build/Release/RunScope.dmg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

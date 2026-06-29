@@ -83,7 +83,7 @@ struct SettingsView: View {
                 .font(.system(size: 48))
                 .foregroundStyle(.brand)
 
-            Text("CCSwitcher Codex")
+            Text("RunScope")
                 .font(.title2.weight(.bold))
 
             Text("Claude Code and Codex Monitor")
@@ -109,11 +109,11 @@ struct SettingsView: View {
                 .padding(.horizontal, 40)
 
             VStack(spacing: 2) {
-                Link("Forked from XueshiQiao/CCSwitcher", destination: URL(string: "https://github.com/XueshiQiao/CCSwitcher")!)
+                Link("Built from XueshiQiao/CCSwitcher", destination: URL(string: "https://github.com/XueshiQiao/CCSwitcher")!)
                     .font(.caption)
-                Link("CCSwitcher Codex on GitHub", destination: URL(string: "https://github.com/neonwatty/CCSwitcher-Codex")!)
+                Link("RunScope on GitHub", destination: URL(string: "https://github.com/neonwatty/RunScope")!)
                     .font(.caption)
-                Text("Independent fork, not affiliated with Anthropic, OpenAI, or upstream CCSwitcher.")
+                Text("Independent project, not affiliated with Anthropic, OpenAI, or upstream CCSwitcher.")
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
                     .multilineTextAlignment(.center)

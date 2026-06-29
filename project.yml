@@ -1,6 +1,6 @@
 name: CCSwitcher
 options:
-  bundleIdPrefix: me.local
+  bundleIdPrefix: me.neonwatty
   deploymentTarget:
     macOS: "14.0"
   xcodeVersion: "16.0"
@@ -37,14 +37,14 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundleURLTypes:
-          - CFBundleURLName: me.local.ccswitcher.codex
+          - CFBundleURLName: me.neonwatty.runscope
             CFBundleURLSchemes:
-              - ccswitcher-codex
+              - runscope
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: me.local.ccswitcher.codex
+        PRODUCT_BUNDLE_IDENTIFIER: me.neonwatty.runscope
         CODE_SIGN_ENTITLEMENTS: CCSwitcher/Resources/CCSwitcher.entitlements
-        PRODUCT_NAME: CCSwitcher Codex
+        PRODUCT_NAME: RunScope
         MARKETING_VERSION: "1.5.1"
         CURRENT_PROJECT_VERSION: "44"
         COMBINE_HIDPI_IMAGES: true
@@ -54,7 +54,7 @@ targets:
       path: CCSwitcher/Resources/CCSwitcher.entitlements
       properties:
         com.apple.security.application-groups:
-          - group.me.local.ccswitcher.codex
+          - group.me.neonwatty.runscope
     dependencies:
       - target: CCSwitcherWidgetExtension
         embed: true
@@ -69,14 +69,14 @@ targets:
     info:
       path: CCSwitcherWidget/Info.plist
       properties:
-        CFBundleDisplayName: CCSwitcher Codex Widget
+        CFBundleDisplayName: RunScope Widget
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         EXAppExtensionAttributes:
           EXExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: me.local.ccswitcher.codex.widget
+        PRODUCT_BUNDLE_IDENTIFIER: me.neonwatty.runscope.widget
         CODE_SIGN_ENTITLEMENTS: CCSwitcherWidget/Resources/CCSwitcherWidget.entitlements
         PRODUCT_NAME: CCSwitcherWidgetExtension
         MARKETING_VERSION: "1.5.1"
@@ -93,4 +93,4 @@ targets:
       properties:
         com.apple.security.app-sandbox: true
         com.apple.security.application-groups:
-          - group.me.local.ccswitcher.codex
+          - group.me.neonwatty.runscope

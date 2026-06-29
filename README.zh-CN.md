@@ -6,11 +6,11 @@
   <a href="README.fr.md"><img src="https://img.shields.io/badge/Français-gray" alt="Français"></a>
 </p>
 
-# CCSwitcher Codex
+# RunScope
 
-CCSwitcher Codex 是 [XueshiQiao/CCSwitcher](https://github.com/XueshiQiao/CCSwitcher) 的独立分叉，用一个轻量级 macOS 菜单栏应用同时监控 Claude Code 和 OpenAI Codex。它可以跟踪账户状态、配额窗口、本地活动以及两种工具的 API 等价成本估算。
+RunScope 是基于 [XueshiQiao/CCSwitcher](https://github.com/XueshiQiao/CCSwitcher) 的独立 macOS 菜单栏项目，可同时监控 Claude Code 和 OpenAI Codex。它可以跟踪账户状态、配额窗口、本地活动以及两种工具的 API 等价成本估算。
 
-Codex 支持曾在上游 [issue #12](https://github.com/XueshiQiao/CCSwitcher/issues/12) 中提出，但因不符合上游项目方向而未合并，因此此分叉单独维护双提供方功能。
+Codex 支持曾在上游 [issue #12](https://github.com/XueshiQiao/CCSwitcher/issues/12) 中提出，但因不符合上游项目方向而未合并，因此 RunScope 以自己的项目身份单独维护双提供方功能。
 
 ## 功能特性
 
@@ -30,17 +30,17 @@ Codex 支持曾在上游 [issue #12](https://github.com/XueshiQiao/CCSwitcher/is
 ## 截图
 
 <p align="center">
-  <img src="assets/CCSwitcher-light-cn.png" alt="CCSwitcher — Light Theme" width="900" /><br/>
+  <img src="assets/CCSwitcher-light-cn.png" alt="RunScope — Light Theme" width="900" /><br/>
   <em>浅色主题</em>
 </p>
 
 <p align="center">
-  <img src="assets/CCSwitcher-dark-cn.png" alt="CCSwitcher — Dark Theme" width="900" /><br/>
+  <img src="assets/CCSwitcher-dark-cn.png" alt="RunScope — Dark Theme" width="900" /><br/>
   <em>深色主题</em>
 </p>
 
 <p align="center">
-  <img src="assets/CCSwitcher-widgets.png" alt="CCSwitcher — Desktop Widget" width="900" /><br/>
+  <img src="assets/CCSwitcher-widgets.png" alt="RunScope — Desktop Widget" width="900" /><br/>
   <em>桌面小组件</em>
 </p>
 
@@ -56,7 +56,7 @@ Codex 支持曾在上游 [issue #12](https://github.com/XueshiQiao/CCSwitcher/is
 
 ### 1. 极简登录流程（原生 `Pipe` 拦截）
 
-与其他构建复杂伪终端（PTY）来处理 CLI 登录状态的工具不同，CCSwitcher 使用极简方式添加新账户：
+与其他构建复杂伪终端（PTY）来处理 CLI 登录状态的工具不同，RunScope 使用极简方式添加新账户：
 - 我们依赖原生 `Process` 和标准 `Pipe()` 重定向。
 - 当 `claude auth login` 在后台静默执行时，Claude CLI 能够智能检测到非交互式环境，并自动启动系统默认浏览器来处理 OAuth 流程。
 - 用户在浏览器中完成授权后，后台 CLI 进程会以成功退出码（0）自然终止，使应用能够恢复流程并捕获新生成的钥匙串凭证，全程无需用户打开终端应用。
@@ -65,13 +65,13 @@ Codex 支持曾在上游 [issue #12](https://github.com/XueshiQiao/CCSwitcher/is
 
 Claude 的 OAuth access token 生命周期非常短（通常 1-2 小时），且刷新端点受到 Claude CLI 内部客户端签名和 Cloudflare 的保护。为解决此问题，我们采用了受 [CodexBar](https://github.com/lucas-clemente/codexbar) 优秀工作启发的**委托式刷新**模式：
 - 应用不会尝试通过 HTTP 请求手动刷新 token，而是监听来自 Anthropic Usage API 的 `HTTP 401: token_expired` 错误。
-- 当捕获到 401 错误时，CCSwitcher 立即启动一个静默后台进程运行 `claude auth status`。
+- 当捕获到 401 错误时，RunScope 立即启动一个静默后台进程运行 `claude auth status`。
 - 这个简单的只读命令会迫使官方 Claude Node.js CLI 唤醒，识别到 token 已过期，并使用其内部逻辑安全地协商新 token。
-- 官方 CLI 将刷新后的 token 写回 macOS 钥匙串。CCSwitcher 随后立即重新读取钥匙串并成功重试用量请求，实现 100% 无缝、零交互的 token 刷新。
+- 官方 CLI 将刷新后的 token 写回 macOS 钥匙串。RunScope 随后立即重新读取钥匙串并成功重试用量请求，实现 100% 无缝、零交互的 token 刷新。
 
 ### 3. 实验性 Security CLI 钥匙串读取器（受 CodexBar 启发）
 
-通过原生 `Security.framework`（`SecItemCopyMatching`）从后台菜单栏应用读取 macOS 钥匙串，通常会触发频繁且阻塞的系统 UI 提示（"CCSwitcher 想要访问您的钥匙串"）。
+通过原生 `Security.framework`（`SecItemCopyMatching`）从后台菜单栏应用读取 macOS 钥匙串，通常会触发频繁且阻塞的系统 UI 提示（"RunScope 想要访问您的钥匙串"）。
 - 为绕过这一用户体验障碍，我们再次借鉴了 **CodexBar** 的策略：
 - 我们执行 macOS 内置命令行工具：`/usr/bin/security find-generic-password -s "Claude Code-credentials" -w`。
 - 当 macOS *首次*提示用户授权此访问时，用户可以点击**"始终允许"**。由于请求来自核心系统二进制文件（`/usr/bin/security`）而非我们签名的应用二进制文件，系统会永久记住此授权。
@@ -79,7 +79,7 @@ Claude 的 OAuth access token 生命周期非常短（通常 1-2 小时），且
 
 ### 4. SwiftUI `Settings` 窗口生命周期保活（适用于 `LSUIElement`，受 CodexBar 启发）
 
-由于 CCSwitcher 是纯菜单栏应用（`Info.plist` 中 `LSUIElement = true`），SwiftUI 拒绝呈现原生 `Settings { ... }` 窗口。这是一个已知的 macOS bug，SwiftUI 认为应用没有活跃的交互式场景来附加设置窗口。
+由于 RunScope 是纯菜单栏应用（`Info.plist` 中 `LSUIElement = true`），SwiftUI 拒绝呈现原生 `Settings { ... }` 窗口。这是一个已知的 macOS bug，SwiftUI 认为应用没有活跃的交互式场景来附加设置窗口。
 - 我们实现了 CodexBar 的**生命周期保活**解决方案。
 - 应用启动时，会创建一个 `WindowGroup("CCSwitcherKeepalive") { HiddenWindowView() }`。
 - `HiddenWindowView` 拦截其底层 `NSWindow`，使其成为一个 1x1 像素、完全透明、可穿透点击的窗口，定位在屏幕外 `x: -5000, y: -5000` 的位置。

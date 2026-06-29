@@ -204,29 +204,29 @@ final class KeychainService: Sendable {
 
     // MARK: - App Keychain operations (Backups)
 
-    private let appBackupService = "me.local.ccswitcher.codex.backups"
+    private let appBackupService = "me.neonwatty.runscope.backups"
+    private let legacyAppBackupServices = ["me.local.ccswitcher.codex.backups"]
     private let appBackupAccount = "all-accounts"
-    private let codexBackupService = "me.local.ccswitcher.codex.codex.backups"
+    private let codexBackupService = "me.neonwatty.runscope.codex.backups"
+    private let legacyCodexBackupServices = ["me.local.ccswitcher.codex.codex.backups"]
     private let codexBackupAccount = "all-accounts"
 
     private func loadBackupStore() -> [String: AccountBackup] {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: appBackupService,
-            kSecAttrAccount as String: appBackupAccount,
-            kSecReturnData as String: true,
-            kSecMatchLimit as String: kSecMatchLimitOne
-        ]
-        
-        var item: CFTypeRef?
-        let status = SecItemCopyMatching(query as CFDictionary, &item)
-        
-        if status == errSecSuccess, let data = item as? Data,
-           let dict = try? JSONDecoder().decode([String: AccountBackup].self, from: data) {
+        if let dict = loadKeychainStore(service: appBackupService, account: appBackupAccount, as: [String: AccountBackup].self) {
             log.debug("[loadBackupStore] Loaded \(dict.count) entries from Keychain")
             return dict
         }
-        
+
+        for legacyService in legacyAppBackupServices {
+            if let dict = loadKeychainStore(service: legacyService, account: appBackupAccount, as: [String: AccountBackup].self) {
+                log.info("[loadBackupStore] Migrating \(dict.count) legacy entries from \(legacyService)")
+                if !dict.isEmpty {
+                    _ = saveBackupStore(dict)
+                }
+                return dict
+            }
+        }
+
         // Migration from local file
         if FileManager.default.fileExists(atPath: backupsFilePath),
            let data = FileManager.default.contents(atPath: backupsFilePath),
@@ -239,9 +239,29 @@ final class KeychainService: Sendable {
             log.info("[loadBackupStore] Migration complete, local backups.json removed")
             return dict
         }
-        
+
         log.debug("[loadBackupStore] No existing backups, returning empty")
         return [:]
+    }
+
+    private func loadKeychainStore<T: Decodable>(service: String, account: String, as type: [String: T].Type) -> [String: T]? {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: account,
+            kSecReturnData as String: true,
+            kSecMatchLimit as String: kSecMatchLimitOne
+        ]
+
+        var item: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &item)
+
+        if status == errSecSuccess, let data = item as? Data,
+           let dict = try? JSONDecoder().decode(type, from: data) {
+            return dict
+        }
+
+        return nil
     }
 
     private func saveBackupStore(_ store: [String: AccountBackup]) -> Bool {
@@ -311,21 +331,19 @@ final class KeychainService: Sendable {
     }
 
     private func loadCodexBackupStore() -> [String: CodexAccountBackup] {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: codexBackupService,
-            kSecAttrAccount as String: codexBackupAccount,
-            kSecReturnData as String: true,
-            kSecMatchLimit as String: kSecMatchLimitOne
-        ]
-
-        var item: CFTypeRef?
-        let status = SecItemCopyMatching(query as CFDictionary, &item)
-
-        if status == errSecSuccess, let data = item as? Data,
-           let dict = try? JSONDecoder().decode([String: CodexAccountBackup].self, from: data) {
+        if let dict = loadKeychainStore(service: codexBackupService, account: codexBackupAccount, as: [String: CodexAccountBackup].self) {
             log.debug("[loadCodexBackupStore] Loaded \(dict.count) entries from Keychain")
             return dict
+        }
+
+        for legacyService in legacyCodexBackupServices {
+            if let dict = loadKeychainStore(service: legacyService, account: codexBackupAccount, as: [String: CodexAccountBackup].self) {
+                log.info("[loadCodexBackupStore] Migrating \(dict.count) legacy entries from \(legacyService)")
+                if !dict.isEmpty {
+                    _ = saveCodexBackupStore(dict)
+                }
+                return dict
+            }
         }
 
         log.debug("[loadCodexBackupStore] No existing Codex backups, returning empty")

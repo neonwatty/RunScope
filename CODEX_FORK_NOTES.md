@@ -1,9 +1,9 @@
-# CCSwitcher Codex Fork Notes
+# RunScope Codex Support Notes
 
-This fork adds Codex account and usage monitoring on top of the original
-Claude Code-focused CCSwitcher app. It intentionally uses local bundle
-identifiers and Keychain service names so it can coexist with an installed
-upstream `/Applications/CCSwitcher.app`.
+RunScope adds Codex account and usage monitoring on top of the original
+Claude Code-focused CCSwitcher workflows. It uses its own bundle identifiers,
+app group, and Keychain service names, with legacy fallback reads for earlier
+app-owned backups.
 
 ## What Works
 
@@ -30,7 +30,7 @@ xcodebuild -project CCSwitcher.xcodeproj -scheme CCSwitcher -configuration Debug
 The local copy created during development is:
 
 ```text
-/Applications/CCSwitcher Codex.app
+/Applications/RunScope.app
 ```
 
 ## Known Limits

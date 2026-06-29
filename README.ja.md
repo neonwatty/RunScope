@@ -6,11 +6,11 @@
   <a href="README.fr.md"><img src="https://img.shields.io/badge/Français-gray" alt="Français"></a>
 </p>
 
-# CCSwitcher Codex
+# RunScope
 
-CCSwitcher Codex は [XueshiQiao/CCSwitcher](https://github.com/XueshiQiao/CCSwitcher) の独立フォークで、軽量な macOS メニューバーアプリから Claude Code と OpenAI Codex を並べて監視できます。アカウント状態、クォータ枠、ローカルアクティビティ、両ツールの API 相当コスト見積もりを追跡します。
+RunScope は [XueshiQiao/CCSwitcher](https://github.com/XueshiQiao/CCSwitcher) を基にした独立 macOS メニューバープロジェクトで、Claude Code と OpenAI Codex を並べて監視できます。アカウント状態、クォータ枠、ローカルアクティビティ、両ツールの API 相当コスト見積もりを追跡します。
 
-Codex サポートは上流の [issue #12](https://github.com/XueshiQiao/CCSwitcher/issues/12) で提案されましたが、上流プロジェクトの方向性とは異なるため、このフォークで個別に維持しています。
+Codex サポートは上流の [issue #12](https://github.com/XueshiQiao/CCSwitcher/issues/12) で提案されましたが、上流プロジェクトの方向性とは異なるため、RunScope として独自に維持しています。
 
 ## 機能
 
@@ -30,17 +30,17 @@ Codex サポートは上流の [issue #12](https://github.com/XueshiQiao/CCSwitc
 ## スクリーンショット
 
 <p align="center">
-  <img src="assets/CCSwitcher-light.png" alt="CCSwitcher — Light Theme" width="900" /><br/>
+  <img src="assets/CCSwitcher-light.png" alt="RunScope — Light Theme" width="900" /><br/>
   <em>ライトテーマ</em>
 </p>
 
 <p align="center">
-  <img src="assets/CCSwitcher-dark.png" alt="CCSwitcher — Dark Theme" width="900" /><br/>
+  <img src="assets/CCSwitcher-dark.png" alt="RunScope — Dark Theme" width="900" /><br/>
   <em>ダークテーマ</em>
 </p>
 
 <p align="center">
-  <img src="assets/CCSwitcher-widgets.png" alt="CCSwitcher — Desktop Widget" width="900" /><br/>
+  <img src="assets/CCSwitcher-widgets.png" alt="RunScope — Desktop Widget" width="900" /><br/>
   <em>デスクトップウィジェット</em>
 </p>
 
@@ -56,7 +56,7 @@ Codex サポートは上流の [issue #12](https://github.com/XueshiQiao/CCSwitc
 
 ### 1. ミニマリストなログインフロー（ネイティブ `Pipe` インターセプション）
 
-CLIのログイン状態を処理するために複雑な疑似端末（PTY）を構築する他のツールとは異なり、CCSwitcherはミニマリストなアプローチで新しいアカウントを追加します：
+CLIのログイン状態を処理するために複雑な疑似端末（PTY）を構築する他のツールとは異なり、RunScopeはミニマリストなアプローチで新しいアカウントを追加します：
 - ネイティブの `Process` と標準の `Pipe()` リダイレクションに依存しています。
 - `claude auth login` がバックグラウンドでサイレント実行されると、Claude CLIは非インタラクティブ環境を検知し、OAuthループを処理するためにシステムのデフォルトブラウザを自動的に起動します。
 - ユーザーがブラウザで認可を行うと、バックグラウンドのCLIプロセスは成功終了コード（0）で自然に終了します。これにより、アプリはフローを再開し、ユーザーにターミナルアプリケーションを開かせることなく、新しく生成されたキーチェーン認証情報をキャプチャできます。
@@ -65,13 +65,13 @@ CLIのログイン状態を処理するために複雑な疑似端末（PTY）�
 
 ClaudeのOAuthアクセストークンは非常に短い有効期間（通常1〜2時間）を持ち、更新エンドポイントはClaude CLIの内部クライアント署名とCloudflareによって保護されています。この問題を解決するために、[CodexBar](https://github.com/lucas-clemente/codexbar)の優れた成果にインスパイアされた**委譲型更新**パターンを使用しています：
 - アプリがHTTPリクエストでトークンを手動更新する代わりに、Anthropic Usage APIからの `HTTP 401: token_expired` エラーを監視します。
-- 401を検知すると、CCSwitcherは即座に `claude auth status` を実行するサイレントバックグラウンドプロセスを起動します。
+- 401を検知すると、RunScopeは即座に `claude auth status` を実行するサイレントバックグラウンドプロセスを起動します。
 - このシンプルな読み取り専用コマンドにより、公式のClaude Node.js CLIが起動し、トークンの期限切れを認識して、自身の内部ロジックを使用して安全に新しいトークンをネゴシエーションします。
-- 公式CLIは更新されたトークンをmacOS Keychainに書き戻します。CCSwitcherは即座にKeychainを再読み取りし、使用状況の取得を正常にリトライすることで、100%シームレスなゼロインタラクショントークン更新を実現しています。
+- 公式CLIは更新されたトークンをmacOS Keychainに書き戻します。RunScopeは即座にKeychainを再読み取りし、使用状況の取得を正常にリトライすることで、100%シームレスなゼロインタラクショントークン更新を実現しています。
 
 ### 3. 実験的なSecurity CLIキーチェーンリーダー（CodexBarにインスパイア）
 
-バックグラウンドのメニューバーアプリからネイティブの `Security.framework`（`SecItemCopyMatching`）を介してmacOS Keychainを読み取ると、攻撃的でブロッキングなシステムUIプロンプト（「CCSwitcherがキーチェーンにアクセスしようとしています」）が頻繁にトリガーされます。
+バックグラウンドのメニューバーアプリからネイティブの `Security.framework`（`SecItemCopyMatching`）を介してmacOS Keychainを読み取ると、攻撃的でブロッキングなシステムUIプロンプト（「RunScopeがキーチェーンにアクセスしようとしています」）が頻繁にトリガーされます。
 - このUXの障壁を回避するために、再び**CodexBar**の戦略を採用しました：
 - macOS組み込みのコマンドラインツールを実行します：`/usr/bin/security find-generic-password -s "Claude Code-credentials" -w`。
 - macOSが*初回*のアクセスに対してユーザーにプロンプトを表示した際、ユーザーは**「常に許可」**をクリックできます。リクエストがアプリの署名バイナリではなく、コアシステムバイナリ（`/usr/bin/security`）から発信されるため、システムはこの許可を永続的に記憶します。
@@ -79,7 +79,7 @@ ClaudeのOAuthアクセストークンは非常に短い有効期間（通常1�
 
 ### 4. `LSUIElement`用のSwiftUI `Settings`ウィンドウライフサイクルキープアライブ（CodexBarにインスパイア）
 
-CCSwitcherは純粋なメニューバーアプリ（`Info.plist`で `LSUIElement = true`）であるため、SwiftUIはネイティブの `Settings { ... }` ウィンドウの表示を拒否します。これは、SwiftUIが設定ウィンドウをアタッチするアクティブなインタラクティブシーンがないと判断する既知のmacOSバグです。
+RunScopeは純粋なメニューバーアプリ（`Info.plist`で `LSUIElement = true`）であるため、SwiftUIはネイティブの `Settings { ... }` ウィンドウの表示を拒否します。これは、SwiftUIが設定ウィンドウをアタッチするアクティブなインタラクティブシーンがないと判断する既知のmacOSバグです。
 - CodexBarの**ライフサイクルキープアライブ**ワークアラウンドを実装しました。
 - 起動時に、アプリは `WindowGroup("CCSwitcherKeepalive") { HiddenWindowView() }` を作成します。
 - `HiddenWindowView` は内部の `NSWindow` をインターセプトし、1x1ピクセルの完全に透明でクリックスルーなウィンドウとして、画面外の `x: -5000, y: -5000` に配置します。

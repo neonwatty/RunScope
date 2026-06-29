@@ -153,7 +153,7 @@ struct MainMenuView: View {
                         .font(.caption)
                         .foregroundStyle(.textSecondary)
                 } else {
-                    Text("CCSwitcher")
+                    Text("RunScope")
                         .font(.headline)
                     Text("No account connected")
                         .font(.caption)

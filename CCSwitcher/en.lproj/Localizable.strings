@@ -99,7 +99,7 @@
 "Usage data will appear here" = "Usage data will appear here";
 
 /* Update Checker */
-"A new version of CCSwitcher is available!" = "A new version of CCSwitcher is available!";
+"A new version of RunScope is available!" = "A new version of RunScope is available!";
 "Version %@ is available. You are currently running version %@.\n\nWould you like to download it now?" = "Version %@ is available. You are currently running version %@.\n\nWould you like to download it now?";
 "Download & Install" = "Download & Install";
 "View Release" = "View Release";
@@ -111,12 +111,12 @@
 "Up to date" = "Up to date";
 "No releases found on GitHub." = "No releases found on GitHub.";
 "GitHub API returned status code %lld." = "GitHub API returned status code %lld.";
-"You are running the latest version of CCSwitcher (%@)." = "You are running the latest version of CCSwitcher (%@).";
-"Downloading CCSwitcher.dmg..." = "Downloading CCSwitcher.dmg...";
+"You are running the latest version of RunScope (%@)." = "You are running the latest version of RunScope (%@).";
+"Downloading RunScope.dmg..." = "Downloading RunScope.dmg...";
 "Downloading Update" = "Downloading Update";
 "Download Complete" = "Download Complete";
-"The update has been downloaded and opened. Please drag the new CCSwitcher to your Applications folder to replace the old one.\n\nDo you want to quit the current app now?" = "The update has been downloaded and opened. Please drag the new CCSwitcher to your Applications folder to replace the old one.\n\nDo you want to quit the current app now?";
-"Quit CCSwitcher" = "Quit CCSwitcher";
+"The update has been downloaded and opened. Please drag the new RunScope to your Applications folder to replace the old one.\n\nDo you want to quit the current app now?" = "The update has been downloaded and opened. Please drag the new RunScope to your Applications folder to replace the old one.\n\nDo you want to quit the current app now?";
+"Quit RunScope" = "Quit RunScope";
 "Download Failed" = "Download Failed";
 "OK" = "OK";
 
@@ -143,15 +143,15 @@
 "More apps at xueshi.dev" = "More apps at xueshi.dev";
 "© 2026 Xueshi Qiao" = "© 2026 Xueshi Qiao";
 
-/* Fork Branding */
-"CCSwitcher Codex" = "CCSwitcher Codex";
+/* Project Branding */
+"RunScope" = "RunScope";
 "Claude Code and Codex Monitor" = "Claude Code and Codex Monitor";
 "Monitor Claude Code and Codex accounts, quota windows, activity, and estimated API-equivalent cost." = "Monitor Claude Code and Codex accounts, quota windows, activity, and estimated API-equivalent cost.";
-"Forked from XueshiQiao/CCSwitcher" = "Forked from XueshiQiao/CCSwitcher";
-"CCSwitcher Codex on GitHub" = "CCSwitcher Codex on GitHub";
-"Independent fork, not affiliated with Anthropic, OpenAI, or upstream CCSwitcher." = "Independent fork, not affiliated with Anthropic, OpenAI, or upstream CCSwitcher.";
-"Downloading CCSwitcher Codex.dmg..." = "Downloading CCSwitcher Codex.dmg...";
-"The update has been downloaded and opened. Please drag the new CCSwitcher Codex to your Applications folder to replace the old one.\n\nDo you want to quit the current app now?" = "The update has been downloaded and opened. Please drag the new CCSwitcher Codex to your Applications folder to replace the old one.\n\nDo you want to quit the current app now?";
-"Quit CCSwitcher Codex" = "Quit CCSwitcher Codex";
-"A new version of CCSwitcher Codex is available!" = "A new version of CCSwitcher Codex is available!";
-"You are running the latest version of CCSwitcher Codex (%@)." = "You are running the latest version of CCSwitcher Codex (%@).";
+"Built from XueshiQiao/CCSwitcher" = "Built from XueshiQiao/CCSwitcher";
+"RunScope on GitHub" = "RunScope on GitHub";
+"Independent project, not affiliated with Anthropic, OpenAI, or upstream CCSwitcher." = "Independent project, not affiliated with Anthropic, OpenAI, or upstream CCSwitcher.";
+"Downloading RunScope.dmg..." = "Downloading RunScope.dmg...";
+"The update has been downloaded and opened. Please drag the new RunScope to your Applications folder to replace the old one.\n\nDo you want to quit the current app now?" = "The update has been downloaded and opened. Please drag the new RunScope to your Applications folder to replace the old one.\n\nDo you want to quit the current app now?";
+"Quit RunScope" = "Quit RunScope";
+"A new version of RunScope is available!" = "A new version of RunScope is available!";
+"You are running the latest version of RunScope (%@)." = "You are running the latest version of RunScope (%@).";

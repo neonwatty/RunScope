@@ -6,11 +6,11 @@
   <a href="README.fr.md"><img src="https://img.shields.io/badge/Français-gray" alt="Français"></a>
 </p>
 
-# CCSwitcher Codex
+# RunScope
 
-CCSwitcher Codex ist ein unabhängiger Fork von [XueshiQiao/CCSwitcher](https://github.com/XueshiQiao/CCSwitcher), der Claude Code und OpenAI Codex in einer leichtgewichtigen macOS-Menüleisten-App nebeneinander überwacht. Die App verfolgt Kontostatus, Kontingentfenster, lokale Aktivität und API-äquivalente Kostenschätzungen für beide Werkzeuge.
+RunScope ist ein unabhängiges macOS-Menüleistenprojekt auf Basis von [XueshiQiao/CCSwitcher](https://github.com/XueshiQiao/CCSwitcher), das Claude Code und OpenAI Codex nebeneinander überwacht. Die App verfolgt Kontostatus, Kontingentfenster, lokale Aktivität und API-äquivalente Kostenschätzungen für beide Werkzeuge.
 
-Codex-Unterstützung wurde upstream in [Issue #12](https://github.com/XueshiQiao/CCSwitcher/issues/12) vorgeschlagen, aber als außerhalb der aktuellen Projektausrichtung abgelehnt. Dieser Fork pflegt die Dual-Provider-Funktionalität daher separat.
+Codex-Unterstützung wurde upstream in [Issue #12](https://github.com/XueshiQiao/CCSwitcher/issues/12) vorgeschlagen, aber als außerhalb der aktuellen Projektausrichtung abgelehnt. RunScope pflegt die Dual-Provider-Funktionalität daher unter eigener Identität.
 
 ## Funktionen
 
@@ -30,17 +30,17 @@ Codex-Unterstützung wurde upstream in [Issue #12](https://github.com/XueshiQiao
 ## Screenshots
 
 <p align="center">
-  <img src="assets/CCSwitcher-light.png" alt="CCSwitcher — Light Theme" width="900" /><br/>
+  <img src="assets/CCSwitcher-light.png" alt="RunScope — Light Theme" width="900" /><br/>
   <em>Helles Design</em>
 </p>
 
 <p align="center">
-  <img src="assets/CCSwitcher-dark.png" alt="CCSwitcher — Dark Theme" width="900" /><br/>
+  <img src="assets/CCSwitcher-dark.png" alt="RunScope — Dark Theme" width="900" /><br/>
   <em>Dunkles Design</em>
 </p>
 
 <p align="center">
-  <img src="assets/CCSwitcher-widgets.png" alt="CCSwitcher — Desktop Widget" width="900" /><br/>
+  <img src="assets/CCSwitcher-widgets.png" alt="RunScope — Desktop Widget" width="900" /><br/>
   <em>Desktop-Widget</em>
 </p>
 
@@ -56,7 +56,7 @@ Diese Anwendung verwendet mehrere spezifische Architekturstrategien, von denen e
 
 ### 1. Minimalistischer Anmeldevorgang (Native `Pipe`-Abfangung)
 
-Im Gegensatz zu anderen Werkzeugen, die komplexe Pseudoterminals (PTY) aufbauen, um CLI-Anmeldezustände zu verarbeiten, verwendet CCSwitcher einen minimalistischen Ansatz zum Hinzufügen neuer Konten:
+Im Gegensatz zu anderen Werkzeugen, die komplexe Pseudoterminals (PTY) aufbauen, um CLI-Anmeldezustände zu verarbeiten, verwendet RunScope einen minimalistischen Ansatz zum Hinzufügen neuer Konten:
 - Wir setzen auf nativen `Process` und standardmäßige `Pipe()`-Umleitung.
 - Wenn `claude auth login` im Hintergrund ausgeführt wird, ist die Claude CLI intelligent genug, eine nicht-interaktive Umgebung zu erkennen und startet automatisch den Standard-Browser des Systems, um den OAuth-Ablauf zu verarbeiten.
 - Sobald der Benutzer im Browser autorisiert hat, beendet sich der CLI-Hintergrundprozess auf natürliche Weise mit einem Erfolgs-Exit-Code (0), sodass unsere App ihren Ablauf fortsetzen und die neu generierten Keychain-Anmeldedaten erfassen kann, ohne dass der Benutzer jemals eine Terminal-Anwendung öffnen muss.
@@ -65,13 +65,13 @@ Im Gegensatz zu anderen Werkzeugen, die komplexe Pseudoterminals (PTY) aufbauen,
 
 Claudes OAuth-Access-Tokens haben eine sehr kurze Lebensdauer (typischerweise 1-2 Stunden) und der Aktualisierungs-Endpunkt wird durch die internen Client-Signaturen der Claude CLI und Cloudflare geschützt. Um dieses Problem zu lösen, verwenden wir ein **Delegierte Aktualisierung**-Muster, inspiriert von der hervorragenden Arbeit in [CodexBar](https://github.com/lucas-clemente/codexbar):
 - Anstatt dass die App versucht, den Token manuell über HTTP-Anfragen zu aktualisieren, lauschen wir auf `HTTP 401: token_expired`-Fehler von der Anthropic Usage API.
-- Wenn ein 401-Fehler abgefangen wird, startet CCSwitcher sofort einen stillen Hintergrundprozess, der `claude auth status` ausführt.
+- Wenn ein 401-Fehler abgefangen wird, startet RunScope sofort einen stillen Hintergrundprozess, der `claude auth status` ausführt.
 - Dieser einfache schreibgeschützte Befehl zwingt die offizielle Claude Node.js CLI aufzuwachen, zu erkennen, dass der Token abgelaufen ist, und sicher einen neuen Token mit ihrer eigenen internen Logik auszuhandeln.
-- Die offizielle CLI schreibt den aktualisierten Token zurück in den macOS Keychain. CCSwitcher liest daraufhin sofort den Keychain erneut aus und wiederholt die Nutzungsabfrage erfolgreich – für eine 100% nahtlose Token-Aktualisierung ohne jegliche Interaktion.
+- Die offizielle CLI schreibt den aktualisierten Token zurück in den macOS Keychain. RunScope liest daraufhin sofort den Keychain erneut aus und wiederholt die Nutzungsabfrage erfolgreich – für eine 100% nahtlose Token-Aktualisierung ohne jegliche Interaktion.
 
 ### 3. Experimenteller Security CLI Keychain-Reader (Inspiriert von CodexBar)
 
-Das Auslesen des macOS Keychain über das native `Security.framework` (`SecItemCopyMatching`) aus einer Menüleisten-Hintergrund-App löst häufig aggressive und blockierende System-UI-Dialoge aus („CCSwitcher möchte auf Ihren Schlüsselbund zugreifen").
+Das Auslesen des macOS Keychain über das native `Security.framework` (`SecItemCopyMatching`) aus einer Menüleisten-Hintergrund-App löst häufig aggressive und blockierende System-UI-Dialoge aus („RunScope möchte auf Ihren Schlüsselbund zugreifen").
 - Um diese UX-Hürde zu umgehen, haben wir erneut eine Strategie von **CodexBar** adaptiert:
 - Wir führen das in macOS integrierte Kommandozeilenwerkzeug aus: `/usr/bin/security find-generic-password -s "Claude Code-credentials" -w`.
 - Wenn macOS den Benutzer beim *ersten Mal* um Zugriff bittet, kann der Benutzer auf **„Immer erlauben"** klicken. Da die Anfrage von einer zentralen System-Binary (`/usr/bin/security`) und nicht von unserer signierten App-Binary kommt, merkt sich das System diese Genehmigung dauerhaft.
@@ -79,7 +79,7 @@ Das Auslesen des macOS Keychain über das native `Security.framework` (`SecItemC
 
 ### 4. SwiftUI `Settings`-Fenster Lifecycle-Keepalive für `LSUIElement` (Inspiriert von CodexBar)
 
-Da CCSwitcher eine reine Menüleisten-App ist (`LSUIElement = true` in `Info.plist`), weigert sich SwiftUI, das native `Settings { ... }`-Fenster anzuzeigen. Dies ist ein bekannter macOS-Bug, bei dem SwiftUI davon ausgeht, dass die App keine aktiven interaktiven Szenen hat, an die das Einstellungsfenster angehängt werden kann.
+Da RunScope eine reine Menüleisten-App ist (`LSUIElement = true` in `Info.plist`), weigert sich SwiftUI, das native `Settings { ... }`-Fenster anzuzeigen. Dies ist ein bekannter macOS-Bug, bei dem SwiftUI davon ausgeht, dass die App keine aktiven interaktiven Szenen hat, an die das Einstellungsfenster angehängt werden kann.
 - Wir haben CodexBars **Lifecycle-Keepalive**-Workaround implementiert.
 - Beim Start erstellt die App eine `WindowGroup("CCSwitcherKeepalive") { HiddenWindowView() }`.
 - Die `HiddenWindowView` fängt das zugrundeliegende `NSWindow` ab und macht es zu einem 1x1-Pixel großen, vollständig transparenten, klickdurchlässigen Fenster, das außerhalb des Bildschirms bei `x: -5000, y: -5000` positioniert ist.

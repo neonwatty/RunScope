@@ -99,7 +99,7 @@
 "Usage data will appear here" = "使用データがここに表示されます";
 
 /* Update Checker */
-"A new version of CCSwitcher is available!" = "CCSwitcher の新しいバージョンが利用可能です！";
+"A new version of RunScope is available!" = "RunScope の新しいバージョンが利用可能です！";
 "Version %@ is available. You are currently running version %@.\n\nWould you like to download it now?" = "バージョン %1$@ が利用可能です。現在のバージョンは %2$@ です。\n\n今すぐダウンロードしますか？";
 "Download & Install" = "ダウンロードしてインストール";
 "View Release" = "リリースを表示";
@@ -111,12 +111,12 @@
 "Up to date" = "最新版です";
 "No releases found on GitHub." = "GitHub にリリースが見つかりません。";
 "GitHub API returned status code %lld." = "GitHub API がステータスコード %lld を返しました。";
-"You are running the latest version of CCSwitcher (%@)." = "CCSwitcher の最新バージョン（%@）を使用中です。";
-"Downloading CCSwitcher.dmg..." = "CCSwitcher.dmg をダウンロード中...";
+"You are running the latest version of RunScope (%@)." = "RunScope の最新バージョン（%@）を使用中です。";
+"Downloading RunScope.dmg..." = "RunScope.dmg をダウンロード中...";
 "Downloading Update" = "アップデートをダウンロード中";
 "Download Complete" = "ダウンロード完了";
-"The update has been downloaded and opened. Please drag the new CCSwitcher to your Applications folder to replace the old one.\n\nDo you want to quit the current app now?" = "アップデートがダウンロードされ開かれました。新しい CCSwitcher をアプリケーションフォルダにドラッグして古いバージョンと置き換えてください。\n\n現在のアプリを終了しますか？";
-"Quit CCSwitcher" = "CCSwitcher を終了";
+"The update has been downloaded and opened. Please drag the new RunScope to your Applications folder to replace the old one.\n\nDo you want to quit the current app now?" = "アップデートがダウンロードされ開かれました。新しい RunScope をアプリケーションフォルダにドラッグして古いバージョンと置き換えてください。\n\n現在のアプリを終了しますか？";
+"Quit RunScope" = "RunScope を終了";
 "Download Failed" = "ダウンロード失敗";
 "OK" = "OK";
 
@@ -139,15 +139,15 @@
 "%@ - %@ (Weekdays) & Weekends" = "%1$@ - %2$@（平日）& 週末";
 "Double limits: 2 PM - 8 AM ET & Weekends" = "ダブル制限：米国東部時間 午後 2 時〜午前 8 時 & 週末";
 
-/* Fork Branding */
-"CCSwitcher Codex" = "CCSwitcher Codex";
+/* Project Branding */
+"RunScope" = "RunScope";
 "Claude Code and Codex Monitor" = "Claude Code / Codex モニター";
 "Monitor Claude Code and Codex accounts, quota windows, activity, and estimated API-equivalent cost." = "Claude Code と Codex のアカウント、クォータ枠、アクティビティ、API 相当コスト見積もりを監視します。";
-"Forked from XueshiQiao/CCSwitcher" = "XueshiQiao/CCSwitcher からのフォーク";
-"CCSwitcher Codex on GitHub" = "GitHub の CCSwitcher Codex";
-"Independent fork, not affiliated with Anthropic, OpenAI, or upstream CCSwitcher." = "Anthropic、OpenAI、上流の CCSwitcher とは提携していない独立フォークです。";
-"Downloading CCSwitcher Codex.dmg..." = "CCSwitcher Codex.dmg をダウンロード中...";
-"The update has been downloaded and opened. Please drag the new CCSwitcher Codex to your Applications folder to replace the old one.\n\nDo you want to quit the current app now?" = "アップデートがダウンロードされ、開かれました。新しい CCSwitcher Codex をアプリケーションフォルダにドラッグして古いバージョンを置き換えてください。\n\n現在のアプリを終了しますか？";
-"Quit CCSwitcher Codex" = "CCSwitcher Codex を終了";
-"A new version of CCSwitcher Codex is available!" = "CCSwitcher Codex の新しいバージョンがあります！";
-"You are running the latest version of CCSwitcher Codex (%@)." = "CCSwitcher Codex の最新バージョン（%@）を実行中です。";
+"Built from XueshiQiao/CCSwitcher" = "XueshiQiao/CCSwitcher を基に構築";
+"RunScope on GitHub" = "GitHub の RunScope";
+"Independent project, not affiliated with Anthropic, OpenAI, or upstream CCSwitcher." = "Anthropic、OpenAI、上流の CCSwitcher とは提携していない独立プロジェクトです。";
+"Downloading RunScope.dmg..." = "RunScope.dmg をダウンロード中...";
+"The update has been downloaded and opened. Please drag the new RunScope to your Applications folder to replace the old one.\n\nDo you want to quit the current app now?" = "アップデートがダウンロードされ、開かれました。新しい RunScope をアプリケーションフォルダにドラッグして古いバージョンを置き換えてください。\n\n現在のアプリを終了しますか？";
+"Quit RunScope" = "RunScope を終了";
+"A new version of RunScope is available!" = "RunScope の新しいバージョンがあります！";
+"You are running the latest version of RunScope (%@)." = "RunScope の最新バージョン（%@）を実行中です。";

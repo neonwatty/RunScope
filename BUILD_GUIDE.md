@@ -1,7 +1,7 @@
-# CCSwitcher - macOS Menubar App Build Guide
+# RunScope - macOS Menubar App Build Guide
 
 A step-by-step guide to building a native macOS menubar app with SwiftUI + AppKit.
-This documents how CCSwitcher was created from scratch for future reference.
+This documents how RunScope is generated and built.
 
 ---
 

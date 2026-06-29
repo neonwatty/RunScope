@@ -6,15 +6,15 @@
   <a href="README.fr.md"><img src="https://img.shields.io/badge/Français-gray" alt="Français"></a>
 </p>
 
-# CCSwitcher Codex
+# RunScope
 
-CCSwitcher Codex is a macOS menu bar app for monitoring Claude Code and OpenAI Codex side by side. It tracks active accounts, quota windows, local activity, and API-equivalent cost estimates for both tools from one lightweight SwiftUI app.
+RunScope is a macOS menu bar app for monitoring Claude Code and OpenAI Codex side by side. It tracks active accounts, quota windows, local activity, and API-equivalent cost estimates for both tools from one lightweight SwiftUI app.
 
-Website: [neonwatty.github.io/CCSwitcher-Codex](https://neonwatty.github.io/CCSwitcher-Codex/)
+Website: [neonwatty.github.io/RunScope](https://neonwatty.github.io/RunScope/)
 
-This is a fork of [XueshiQiao/CCSwitcher](https://github.com/XueshiQiao/CCSwitcher), which focuses on Claude Code account switching. Codex support was proposed upstream in [issue #12](https://github.com/XueshiQiao/CCSwitcher/issues/12) and was declined as outside that project’s current direction, so this fork keeps the dual-provider functionality separate.
+RunScope builds on [XueshiQiao/CCSwitcher](https://github.com/XueshiQiao/CCSwitcher), which focuses on Claude Code account switching. Codex support was proposed upstream in [issue #12](https://github.com/XueshiQiao/CCSwitcher/issues/12) and was declined as outside that project’s current direction, so RunScope keeps the dual-provider functionality separate under its own identity.
 
-This fork uses its own bundle identifier and app group (`me.local.ccswitcher.codex` / `group.me.local.ccswitcher.codex`) so it can be installed and tested separately from the upstream CCSwitcher app.
+RunScope uses its own bundle identifier and app group (`me.neonwatty.runscope` / `group.me.neonwatty.runscope`) and includes legacy fallback reads for earlier app-owned backup data.
 
 ## Features
 
@@ -33,7 +33,7 @@ This fork uses its own bundle identifier and app group (`me.local.ccswitcher.cod
 
 ## Relationship to Upstream
 
-This fork preserves the original app's Claude Code workflows and adds Codex monitoring. It is maintained independently from the upstream CCSwitcher project and is not endorsed by the upstream maintainer.
+RunScope preserves the original app's Claude Code workflows and adds Codex monitoring. It is maintained independently from the upstream CCSwitcher project and is not endorsed by the upstream maintainer.
 
 Attribution:
 
@@ -54,7 +54,7 @@ Known limitations:
 - Codex line-count parsing is not implemented yet, so Codex "Lines" shows `0`.
 - Cost is an estimate. It uses local telemetry token counts and public API-equivalent pricing, not your ChatGPT subscription bill.
 - Codex telemetry may emit model names such as `gpt-5.5`; the app uses the matching OpenAI API-equivalent pricing row when available.
-- This is a public fork for local testing and is not affiliated with Anthropic, OpenAI, or the upstream CCSwitcher maintainer.
+- RunScope is not affiliated with Anthropic, OpenAI, or the upstream CCSwitcher maintainer.
 
 ## Install Local Build
 
@@ -68,31 +68,31 @@ xcodebuild -project CCSwitcher.xcodeproj -scheme CCSwitcher -configuration Debug
 Install the built app manually:
 
 ```sh
-rm -rf "/Applications/CCSwitcher Codex.app"
-cp -R ~/Library/Developer/Xcode/DerivedData/CCSwitcher-*/Build/Products/Debug/CCSwitcher\ Codex.app "/Applications/CCSwitcher Codex.app"
-open "/Applications/CCSwitcher Codex.app"
+rm -rf "/Applications/RunScope.app"
+cp -R ~/Library/Developer/Xcode/DerivedData/CCSwitcher-*/Build/Products/Debug/RunScope.app "/Applications/RunScope.app"
+open "/Applications/RunScope.app"
 ```
 
 ## Screenshots
 
 <p align="center">
-  <img src="docs/assets/issue-usage.png" alt="CCSwitcher Codex — Usage dashboard" width="342" /><br/>
+  <img src="docs/assets/issue-usage.png" alt="RunScope — Usage dashboard" width="342" /><br/>
   <em>Claude Code and Codex usage dashboard</em>
 </p>
 
 <p align="center">
-  <img src="docs/assets/issue-accounts.png" alt="CCSwitcher Codex — Accounts dashboard" width="357" /><br/>
+  <img src="docs/assets/issue-accounts.png" alt="RunScope — Accounts dashboard" width="357" /><br/>
   <em>Claude Code and Codex accounts</em>
 </p>
 
 <p align="center">
-  <img src="assets/CCSwitcher-widgets.png" alt="CCSwitcher — Desktop Widget" width="900" /><br/>
+  <img src="assets/CCSwitcher-widgets.png" alt="RunScope — Desktop Widget" width="900" /><br/>
   <em>Desktop Widget</em>
 </p>
 
 ## License
 
-The upstream [XueshiQiao/CCSwitcher](https://github.com/XueshiQiao/CCSwitcher) repository does not currently publish an explicit open-source license. Until that is resolved, treat this fork as source-available for inspection and local experimentation rather than freely redistributable open-source software.
+The upstream [XueshiQiao/CCSwitcher](https://github.com/XueshiQiao/CCSwitcher) repository does not currently publish an explicit open-source license. Until that is resolved, treat RunScope as source-available for inspection and local experimentation rather than freely redistributable open-source software.
 
 ## Demo
 
@@ -106,7 +106,7 @@ This application employs several specific architectural strategies, some uniquel
 
 ### 1. Minimalist Login Flow (Native `Pipe` Interception)
 
-Unlike other tools that build complex pseudoterminals (PTY) to handle CLI login states, CCSwitcher uses a minimalist approach to add new accounts:
+Unlike other tools that build complex pseudoterminals (PTY) to handle CLI login states, RunScope uses a minimalist approach to add new accounts:
 - We rely on native `Process` and standard `Pipe()` redirection.
 - When `claude auth login` is executed silently in the background, the Claude CLI is smart enough to detect a non-interactive environment and automatically launches the system's default browser to handle the OAuth loop.
 - Once the user authorizes in the browser, the background CLI process naturally terminates with a success exit code (0), allowing our app to resume its flow and capture the newly generated keychain credentials without ever requiring the user to open a terminal application.
@@ -115,13 +115,13 @@ Unlike other tools that build complex pseudoterminals (PTY) to handle CLI login 
 
 Claude's OAuth access tokens have a very short lifespan (typically 1-2 hours) and the refresh endpoint is protected by Claude CLI's internal client signatures and Cloudflare. To solve this, we use a **Delegated Refresh** pattern inspired by the excellent work in [CodexBar](https://github.com/lucas-clemente/codexbar):
 - Instead of the app trying to manually refresh the token via HTTP requests, we listen for `HTTP 401: token_expired` errors from the Anthropic Usage API.
-- When a 401 is caught, CCSwitcher immediately launches a silent background process running `claude auth status`.
+- When a 401 is caught, RunScope immediately launches a silent background process running `claude auth status`.
 - This simple read-only command forces the official Claude Node.js CLI to wake up, realize the token is expired, and securely negotiate a new token using its own internal logic. 
-- The official CLI writes the refreshed token back into the macOS Keychain. CCSwitcher then immediately re-reads the Keychain and successfully retries the usage fetch, achieving a 100% seamless, zero-interaction token refresh.
+- The official CLI writes the refreshed token back into the macOS Keychain. RunScope then immediately re-reads the Keychain and successfully retries the usage fetch, achieving a 100% seamless, zero-interaction token refresh.
 
 ### 3. Experimental Security CLI Keychain Reader (Inspired by CodexBar)
 
-Reading from the macOS Keychain via native `Security.framework` (`SecItemCopyMatching`) from a background menu bar app often triggers aggressive and blocking system UI prompts ("CCSwitcher wants to access your keychain"). 
+Reading from the macOS Keychain via native `Security.framework` (`SecItemCopyMatching`) from a background menu bar app often triggers aggressive and blocking system UI prompts ("RunScope wants to access your keychain").
 - To bypass this UX hurdle, we again adapted a strategy from **CodexBar**:
 - We execute the macOS built-in command line tool: `/usr/bin/security find-generic-password -s "Claude Code-credentials" -w`.
 - When macOS prompts the user for this access the *first time*, the user can click **"Always Allow"**. Because the request comes from a core system binary (`/usr/bin/security`) rather than our signed app binary, the system permanently remembers this grant.
@@ -129,7 +129,7 @@ Reading from the macOS Keychain via native `Security.framework` (`SecItemCopyMat
 
 ### 4. SwiftUI `Settings` Window Lifecycle Keepalive for `LSUIElement` (Inspired by CodexBar)
 
-Because CCSwitcher is a pure menu bar app (`LSUIElement = true` in `Info.plist`), SwiftUI refuses to present the native `Settings { ... }` window. This is a known macOS bug where SwiftUI assumes the app has no active interactive scenes to attach the settings window to.
+Because RunScope is a pure menu bar app (`LSUIElement = true` in `Info.plist`), SwiftUI refuses to present the native `Settings { ... }` window. This is a known macOS bug where SwiftUI assumes the app has no active interactive scenes to attach the settings window to.
 - We implemented CodexBar's **Lifecycle Keepalive** workaround.
 - On launch, the app creates a `WindowGroup("CCSwitcherKeepalive") { HiddenWindowView() }`.
 - The `HiddenWindowView` intercepts its underlying `NSWindow` and makes it a 1x1 pixel, completely transparent, click-through window positioned off-screen at `x: -5000, y: -5000`.

@@ -1,8 +1,8 @@
-# CCSwitcher Architecture
+# RunScope Architecture
 
 ## Keychain Token Storage
 
-CCSwitcher manages two sets of keychain entries:
+RunScope manages two sets of keychain entries:
 
 ```
 macOS Keychain
@@ -14,17 +14,17 @@ macOS Keychain
 │  │  Password: <Active OAuth Token JSON>                  │   │
 │  │                                                       │   │
 │  │  Claude CLI reads/writes this to authenticate.        │   │
-│  │  CCSwitcher accesses it via `security` CLI tool       │   │
+│  │  RunScope accesses it via `security` CLI tool         │   │
 │  │  (NOT Security framework) to avoid repeated password  │   │
 │  │  prompts. User clicks "Always Allow" once.            │   │
 │  └───────────────────────────────────────────────────────┘   │
 │                                                              │
-│  ┌─ CCSwitcher owns these entries ──────────────────────┐   │
-│  │  Service:  "com.ccswitcher.tokens"                    │   │
+│  ┌─ RunScope owns these entries ────────────────────────┐   │
+│  │  Service:  "me.neonwatty.runscope.backups"            │   │
 │  │  Account:  "<Account-A UUID>"                         │   │
 │  │  Password: <Account A's backed-up OAuth Token JSON>   │   │
 │  │                                                       │   │
-│  │  Service:  "com.ccswitcher.tokens"                    │   │
+│  │  Service:  "me.neonwatty.runscope.backups"            │   │
 │  │  Account:  "<Account-B UUID>"                         │   │
 │  │  Password: <Account B's backed-up OAuth Token JSON>   │   │
 │  │                                                       │   │
@@ -529,4 +529,3 @@ To circumvent this macOS limitation, CCSwitcher uses the **Lifecycle Keepalive**
 2. **True Invisibility:** The `HiddenWindowView` intercepts its own NSWindow on appearance and sets it to be `[.borderless]`, `alphaValue = 0`, positioned far off-screen (`x: -5000, y: -5000`), and configured to ignore all mouse events.
 3. **Triggering Settings:** `HiddenWindowView` listens for a custom `Notification.Name.ccswitcherOpenSettings` via Combine. When received, it invokes the native SwiftUI `@Environment(\.openSettings)` action.
 4. **Invocation:** In `MainMenuView`, when the user clicks the Settings gear icon, we post this notification. The hidden window (which SwiftUI recognizes as a valid, active scene) catches it and smoothly opens the native Settings window with proper focus.
-

@@ -1,11 +1,11 @@
-# CCSwitcher Agent Guidelines
+# RunScope Agent Guidelines
 
 **Rules**:
 - `project.yml` is the ONLY source of truth. NEVER edit `.pbxproj` or `Info.plist` directly. Run `xcodegen generate` after changes.
 - `CCSwitcher.xcodeproj` is disposable (git-ignored).
 
-**App**: Minimalist macOS menu bar app for managing/switching Claude Code accounts.
-**Features**: Terminal-free login (Process/Pipe interception), zero-interaction token refresh (`security` CLI workaround), API usage tracking.
+**App**: Minimalist macOS menu bar app for monitoring/switching Claude Code and Codex accounts.
+**Features**: Terminal-free login (Process/Pipe interception), zero-interaction token refresh (`security` CLI workaround), API usage tracking, Codex monitoring.
 
 **Architecture & Files**:
 - **Docs**: `ARCHITECTURE.md` (token flow), `BUILD_GUIDE.md`, `project.yml` (Xcode config).
