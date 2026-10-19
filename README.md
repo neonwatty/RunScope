@@ -10,7 +10,7 @@
 
 RunScope is a macOS menu bar app for monitoring Claude Code and OpenAI Codex side by side. It tracks active accounts, quota windows, local activity, and API-equivalent cost estimates for both tools from one lightweight SwiftUI app.
 
-Website: [neonwatty.github.io/RunScope](https://neonwatty.github.io/RunScope/)
+Website: [neonwatty.github.io/RunScope](https://runscope.neonwatty.com/)
 
 RunScope builds on [XueshiQiao/CCSwitcher](https://github.com/XueshiQiao/CCSwitcher), which focuses on Claude Code account switching. Codex support was proposed upstream in [issue #12](https://github.com/XueshiQiao/CCSwitcher/issues/12) and was declined as outside that project’s current direction, so RunScope keeps the dual-provider functionality separate under its own identity.
 
